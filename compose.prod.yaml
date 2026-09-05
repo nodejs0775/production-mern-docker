@@ -1,0 +1,49 @@
+services:
+  frontend:
+    image: harish0775/production-mern-frontend:latest
+    container_name: prod-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  backend:
+    image: harish0775/production-mern-backend:latest
+    container_name: prod-backend
+    environment:
+      PORT: 3000
+      MONGO_URI: mongodb://database:27017/docker_production
+    expose:
+      - "3000"
+    depends_on:
+      database:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://localhost:3000/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  database:
+    image: mongo:8
+    container_name: prod-mongo
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test:
+        - CMD
+        - mongosh
+        - --quiet
+        - --eval
+        - db.adminCommand('ping').ok
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  mongo_data:
