@@ -26,7 +26,7 @@ function App() {
 
   return (
     <div style={{maxWidth:700, margin:"40px auto", fontFamily:"Arial"}}>
-      <h1>Production MERN Docker Demo</h1>
+      <h1>Production MERN Docker Demo - Auto Deploy Working</h1>
       <small>Hello bro i am auto deploy</small>
       <p>Nginx → React → Node.js → MongoDB → Volume</p>
 
